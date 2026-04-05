@@ -52,7 +52,7 @@ That's it! Your service will see the change within seconds.
 
 
 
-[Demo Pic][db rows.jpg]
+![Demo Pic](db rows.jpg)
 
 
 
