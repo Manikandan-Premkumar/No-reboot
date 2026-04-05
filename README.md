@@ -49,3 +49,7 @@ curl -X PUT http://localhost:3000/api/v1/config/payments.enabled \
   -H "Content-Type: application/json" \
   -d '{"value":false}'
 That's it! Your service will see the change within seconds.
+
+<img width="1143" height="212" alt="image" src="https://github.com/user-attachments/assets/fac1e9b2-aa4a-4738-8d72-0d67a1d54060" />
+
+
