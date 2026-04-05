@@ -52,7 +52,7 @@ That's it! Your service will see the change within seconds.
 
 
 
-![db rows](https://github.com/user-attachments/assets/845ddfc7-687f-4e97-a4cc-9c211f92446d)
+[Demo Pic][db rows.jpg]
 
 
 
