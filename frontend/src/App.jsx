@@ -64,25 +64,19 @@ async function fetchConfigs() {
 async function login() {
   try {
     const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}auth/login`,
+      `${import.meta.env.VITE_API_URL}/auth/login`, // Added the / right here
       {
         username,
         password,
       }
-    )
+    );
 
-    localStorage.setItem(
-      'token',
-      response.data.access_token
-    )
-
-    setIsLoggedIn(true)
-
-    console.log('Logged in')
-
+    localStorage.setItem('token', response.data.access_token);
+    setIsLoggedIn(true);
+    console.log('Logged in');
   } catch (error) {
-    console.error(error)
-    alert('Invalid credentials')
+    console.error(error);
+    alert('Invalid credentials');
   }
 }
 useEffect(() => {
