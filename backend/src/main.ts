@@ -6,20 +6,10 @@ async function bootstrap() {
     await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: [
-      'http://localhost:5173',
-      'https://no-reboot.vercel.app',
-    ],
-    methods: [
-      'GET',
-      'HEAD',
-      'PUT',
-      'PATCH',
-      'POST',
-      'DELETE',
-      'OPTIONS',
-    ],
+    origin: true,
+    methods: '*',
     credentials: true,
+    allowedHeaders: '*',
   });
 
   await app.listen(
