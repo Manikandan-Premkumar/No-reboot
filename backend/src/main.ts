@@ -10,6 +10,15 @@ async function bootstrap() {
       'http://localhost:5173',
       'https://no-reboot.vercel.app',
     ],
+    methods: [
+      'GET',
+      'HEAD',
+      'PUT',
+      'PATCH',
+      'POST',
+      'DELETE',
+      'OPTIONS',
+    ],
     credentials: true,
   });
 
