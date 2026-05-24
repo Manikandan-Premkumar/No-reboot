@@ -21,7 +21,7 @@ async function updateValue(key, newValue) {
       localStorage.getItem('token')
 
     await axios.put(
-           `${import.meta.env.VITE_API_URL}/api/v1/config/${key}`,
+           `${import.meta.env.VITE_API_URL}api/v1/config/${key}`,
       {
         value: newValue,
       },
@@ -47,7 +47,7 @@ async function fetchConfigs() {
     const token = localStorage.getItem('token')
 
     const response = await axios.get(
-       `${import.meta.env.VITE_API_URL}/api/v1/config`,
+       `${import.meta.env.VITE_API_URL}api/v1/config`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -64,7 +64,7 @@ async function fetchConfigs() {
 async function login() {
   try {
     const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/login`,
+        `${import.meta.env.VITE_API_URL}auth/login`,
       {
         username,
         password,
