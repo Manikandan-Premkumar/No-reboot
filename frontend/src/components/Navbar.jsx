@@ -21,11 +21,6 @@ export default function Navbar() {
         </p>
       </div>
 
-      <div className="flex gap-6">
-        <button>Configs</button>
-        <button>Logs</button>
-        <button>Deployments</button>
-      </div>
     </nav>
   )
 }
