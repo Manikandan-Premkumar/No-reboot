@@ -7,6 +7,10 @@ function ConfigCard({
   const [inputValue, setInputValue] =
     useState(config.value)
 
+  useEffect(() => {
+    setInputValue(config.value)
+  }, [config.value])
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border p-6">
 
