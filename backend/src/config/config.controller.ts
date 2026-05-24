@@ -1,12 +1,24 @@
-import { Controller, Get, Post, Put, Body, Param, UseGuards, Request, Delete, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+
 import { AuthGuard } from '@nestjs/passport';
 import { ConfigService } from './config.service';
 
 @Controller('api/v1/config')
 export class ConfigController {
-  constructor(private readonly configService: ConfigService) {}
-
- 
+  constructor(
+    private readonly configService: ConfigService,
+  ) {}
 
   @Get()
   async findAll(@Query('scope') scope?: string) {
@@ -18,28 +30,41 @@ export class ConfigController {
     return this.configService.findOne(key);
   }
 
-  @Get(':key/value')
+  @Get(':key/raw')
   async getValue(@Param('key') key: string) {
     const value = await this.configService.getValue(key);
-    return { key, value };
+
+    return {
+      key,
+      value,
+    };
   }
 
- @Post()
+  @Post()
   @UseGuards(AuthGuard('jwt'))
-  async create(@Body() body: any, @Request() req) {
-    console.log('User:', req.user); // { username: 'admin', role: 'admin' }
+  async create(
+    @Body() body: any,
+    @Request() req,
+  ) {
     return this.configService.create(body);
   }
 
   @Put(':key')
   @UseGuards(AuthGuard('jwt'))
-  async update(@Param('key') key: string, @Body() body: any) {
+  async update(
+    @Param('key') key: string,
+    @Body() body: any,
+  ) {
     return this.configService.update(key, body);
   }
 
   @Delete(':key')
+  @UseGuards(AuthGuard('jwt'))
   async delete(@Param('key') key: string) {
     await this.configService.delete(key);
-    return { message: `Config "${key}" deleted` };
+
+    return {
+      message: `Config ${key} deleted`,
+    };
   }
 }

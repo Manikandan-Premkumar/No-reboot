@@ -1,42 +1,68 @@
-version: '3.8'
+version: '3.9'
 
 services:
+
   postgres:
     image: postgres:15
     container_name: no-reboot-postgres
+
     environment:
       POSTGRES_USER: app_user
       POSTGRES_PASSWORD: app_password
       POSTGRES_DB: no_reboot_hq
+
     ports:
       - "5432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U app_user"]
+      test: ["CMD-SHELL", "pg_isready -U app_user -d no_reboot_hq"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7
+    container_name: no-reboot-redis
+
+    ports:
+      - "6379:6379"
+
   app:
-    build: .
+    build: ./backend
     container_name: no-reboot-app
+
     ports:
       - "3000:3000"
+
     environment:
       NODE_ENV: development
+
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USERNAME: app_user
       DB_PASSWORD: app_password
       DB_NAME: no_reboot_hq
-      PORT: 3000
+
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+      JWT_SECRET: my-secret
+
     depends_on:
       postgres:
         condition: service_healthy
+
+      redis:
+        condition: service_started
+
     volumes:
-      - ./src:/app/src  # For hot reload in development
+      - ./backend:/app
       - /app/node_modules
+
+    command: npm run start:dev
 
 volumes:
   postgres_data:

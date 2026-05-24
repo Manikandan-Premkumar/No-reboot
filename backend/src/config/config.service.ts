@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, ConflictException } from '@nestjs/common
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Config } from '../entities/config.entity';
+import { redis } from '../redis/redis';
 
 @Injectable()
 export class ConfigService {
@@ -29,12 +30,19 @@ export class ConfigService {
     return this.configRepository.save(config);
   }
 
-  async findAll(scope?: string) {
-    const where: any = { isActive: true };
-    if (scope) {
-      where.scope = scope;
-    }
-    return this.configRepository.find({ where });
+    async findAll(scope?: string) {
+    const cacheKey = `configs:${scope || 'all'}`;
+
+    const cached = await redis.get(cacheKey);
+    if (cached) return JSON.parse(cached);
+
+    const configs = await this.configRepository.find({
+      where: scope ? { scope } : {},
+    });
+
+    await redis.set(cacheKey, JSON.stringify(configs), 'EX', 60);
+
+    return configs;
   }
 
   async findOne(key: string) {
