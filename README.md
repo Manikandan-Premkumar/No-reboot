@@ -48,7 +48,8 @@ Prerequisites
 Node.js (v18 or higher)
 Docker and Docker Compose
 
-git clone [https://github.com/Manikandan-Premkumar/No-reboot.git](https://github.com/Manikandan-Premkumar/No-reboot.git)
+git clone https://github.com/Manikandan-Premkumar/No-reboot.git
+
 cd No-reboot
 
 2. Configure Environment Variables
