@@ -11,8 +11,20 @@ export class ConfigService {
     private configRepository: Repository<Config>,
   ) {}
 
+  private async clearCache() {
+    try {
+      const keys = await redis.keys('configs:*');
+      if (keys.length > 0) {
+        await redis.del(...keys);
+        console.log('Redis configuration cache cleared');
+      }
+    } catch (error) {
+      console.error('Failed to clear Redis cache:', error);
+    }
+  }
+
   async create(data: { key: string; value: any; description?: string }) {
-    // Check if config already exists
+    
     const existing = await this.configRepository.findOne({
       where: { key: data.key },
     });
@@ -27,7 +39,9 @@ export class ConfigService {
       description: data.description || '',
       isActive: true,
     });
-    return this.configRepository.save(config);
+    const savedConfig = await this.configRepository.save(config);
+    await this.clearCache();
+    return savedConfig;;
   }
 
     async findAll(scope?: string) {
