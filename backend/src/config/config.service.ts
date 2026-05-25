@@ -11,12 +11,14 @@ export class ConfigService {
     private configRepository: Repository<Config>,
   ) {}
 
+  
   private async clearCache() {
     try {
+      
       const keys = await redis.keys('configs:*');
       if (keys.length > 0) {
         await redis.del(...keys);
-        console.log('Redis configuration cache cleared');
+        console.log('🧹 Redis configuration cache cleared');
       }
     } catch (error) {
       console.error('Failed to clear Redis cache:', error);
@@ -24,7 +26,6 @@ export class ConfigService {
   }
 
   async create(data: { key: string; value: any; description?: string }) {
-    
     const existing = await this.configRepository.findOne({
       where: { key: data.key },
     });
@@ -39,23 +40,25 @@ export class ConfigService {
       description: data.description || '',
       isActive: true,
     });
+
     const savedConfig = await this.configRepository.save(config);
-    await this.clearCache();
-    return savedConfig;;
+    await this.clearCache(); 
   }
 
-    async findAll(scope?: string) {
+  async findAll(scope?: string) {
     const cacheKey = `configs:${scope || 'all'}`;
 
     const cached = await redis.get(cacheKey);
-    if (cached) return JSON.parse(cached);
+    if (cached) {
+      console.log(' Serving configs from Redis Cache');
+      return JSON.parse(cached);
+    }
 
     const configs = await this.configRepository.find({
       where: scope ? { scope } : {},
     });
 
     await redis.set(cacheKey, JSON.stringify(configs), 'EX', 60);
-
     return configs;
   }
 
@@ -89,14 +92,17 @@ export class ConfigService {
     config.value = data.value;
     const updated = await this.configRepository.save(config);
     
-    // You can add version tracking here later
-    console.log(`✅ Config updated: ${key} from ${oldValue} to ${data.value}`);
+    console.log(` Database updated: ${key} from ${oldValue} to ${data.value}`);
+    
+    await this.clearCache(); 
     
     return updated;
   }
 
   async delete(key: string) {
     const config = await this.findOne(key);
-    return this.configRepository.softDelete({ id: config.id });
+    const deleted = await this.configRepository.softDelete({ id: config.id });
+    await this.clearCache(); 
+    return deleted;
   }
 }
