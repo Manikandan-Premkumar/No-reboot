@@ -8,7 +8,8 @@ import ConfigCard from './components/ConfigCard'
 
 function App() {
   const [configs, setConfigs] = useState([])
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return !!localStorage.getItem('token');});
   const [username, setUsername] =useState('')
   const [password, setPassword] =useState('')
 
