@@ -86,6 +86,12 @@ useEffect(() => {
   }
 }, [isLoggedIn])
 
+function logout() {
+  localStorage.removeItem('token');
+  setIsLoggedIn(false);
+  setConfigs([]); 
+}
+
 
 const analyticsEnabled = configs.some(
   c => c.key === 'ENABLE_ANALYTICS' && c.value === 'true'
@@ -186,6 +192,12 @@ if (!isLoggedIn) {
         <h2 className="text-3xl font-bold text-gray-800">
           Live Configurations
         </h2>
+      <button 
+          onClick={logout}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition"
+        >
+          Logout
+        </button>
 
         <p className="text-gray-500 mt-2">
           Update configs without restarting services
